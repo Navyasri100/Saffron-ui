@@ -231,10 +231,21 @@ export class ReservationComponent {
           this.slotsLoading.set(false);
         },
         error: () => {
-          // Fallback to all slots if API fails
-          this.availableTimeSlots.set([...this.ALL_SLOTS]);
-          this.lunchSlots.set([...this.LUNCH_SLOTS]);
-          this.dinnerSlots.set([...this.DINNER_SLOTS]);
+          let fallback = [...this.ALL_SLOTS];
+          if (selectedDate === this.today) {
+            const now = new Date();
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+            fallback = fallback.filter(slot => {
+              const [time, period] = slot.split(' ');
+              let [h, m] = time.split(':').map(Number);
+              if (period === 'PM' && h !== 12) h += 12;
+              if (period === 'AM' && h === 12) h = 0;
+              return (h * 60 + m) > currentMinutes + 30;
+            });
+          }
+          this.availableTimeSlots.set(fallback);
+          this.lunchSlots.set(fallback.filter(s => this.LUNCH_SLOTS.includes(s)));
+          this.dinnerSlots.set(fallback.filter(s => this.DINNER_SLOTS.includes(s)));
           this.slotsLoading.set(false);
         }
       });
