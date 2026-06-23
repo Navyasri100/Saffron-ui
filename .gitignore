@@ -3,3 +3,5 @@ dist/
 .angular/
 *.env
 .DS_Store
+*.spec.ts
+tsconfig.spec.json
