@@ -1,9 +1,8 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ReservationService } from '../../services/reservation.service';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-reservation',
@@ -15,7 +14,7 @@ import { environment } from '../../../environments/environment';
       <div class="text-center mb-12 pb-8 border-b border-amber-100">
         <p class="text-amber-600 font-medium uppercase tracking-widest text-sm mb-3">Reserve</p>
         <h1 class="text-5xl font-bold mb-1" style="font-family: 'Georgia', serif; color: #1a1a1a;">Book a Table</h1>
-        <p class="text-gray-600 mt-3 text-lg">Fill in your details and we'll confirm your reservation by email.</p>
+        <p class="text-gray-600 mt-3 text-lg">Fill in your details to reserve your table and access the menu.</p>
         <div class="flex items-center justify-center gap-3 mt-6">
           <div class="w-8 h-px bg-gradient-to-r from-transparent to-amber-300"></div>
           <span class="text-amber-600">✦</span>
@@ -27,8 +26,15 @@ import { environment } from '../../../environments/environment';
       <div *ngIf="success()" class="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
         <div class="text-4xl mb-4">✅</div>
         <h3 class="text-xl font-bold text-green-800 mb-2">Reservation Confirmed!</h3>
-        <p class="text-green-600">We've sent a confirmation to your email. See you soon!</p>
-        <button (click)="success.set(false)" class="mt-6 text-sm text-green-700 underline">Make another reservation</button>
+        <p class="text-green-600 mb-6">Your reservation has been saved. You can access your menu using your email or phone number.</p>
+        <div class="flex gap-4 justify-center">
+          <a href="/menu-login" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl transition">
+            Access Menu →
+          </a>
+          <button (click)="success.set(false)" class="text-green-700 font-semibold underline hover:no-underline">
+            Make Another
+          </button>
+        </div>
       </div>
 
       <!-- Form -->
@@ -166,15 +172,15 @@ export class ReservationComponent {
     return `${y}-${m}-${day}`;
   })();
 
-  private readonly LUNCH_SLOTS = ['12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM'];
-  private readonly DINNER_SLOTS = ['6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM','9:30 PM','10:00 PM','10:30 PM'];
-  private readonly ALL_SLOTS = [...this.LUNCH_SLOTS, ...this.DINNER_SLOTS];
+  private LUNCH_SLOTS: string[] = [];
+  private DINNER_SLOTS: string[] = [];
+  private ALL_SLOTS: string[] = [];
 
   availableTimeSlots = signal<string[]>([]);
   slotsLoading = signal(false);
 
-  lunchSlots = signal<string[]>([...this.LUNCH_SLOTS]);
-  dinnerSlots = signal<string[]>([...this.DINNER_SLOTS]);
+  lunchSlots = signal<string[]>([]);
+  dinnerSlots = signal<string[]>([]);
 
   form = this.fb.group({
     name:   ['', Validators.required],
@@ -198,6 +204,29 @@ export class ReservationComponent {
     private http: HttpClient
   ) {}
 
+  ngOnInit(): void {
+    // Load time slots from JSON
+    this.http.get<any>('/assets/data/time-slots.json').subscribe({
+      next: (data) => {
+        this.LUNCH_SLOTS = data.lunch || [];
+        this.DINNER_SLOTS = data.dinner || [];
+        this.ALL_SLOTS = [...this.LUNCH_SLOTS, ...this.DINNER_SLOTS];
+        // Initialize signals with loaded slots
+        this.lunchSlots.set([...this.LUNCH_SLOTS]);
+        this.dinnerSlots.set([...this.DINNER_SLOTS]);
+      },
+      error: () => {
+        console.error('Failed to load time slots from JSON');
+        // Fallback to hardcoded
+        this.LUNCH_SLOTS = ['12:30 PM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM'];
+        this.DINNER_SLOTS = ['6:30 PM','7:00 PM','7:30 PM','8:00 PM','8:30 PM','9:00 PM','9:30 PM','10:00 PM','10:30 PM'];
+        this.ALL_SLOTS = [...this.LUNCH_SLOTS, ...this.DINNER_SLOTS];
+        this.lunchSlots.set([...this.LUNCH_SLOTS]);
+        this.dinnerSlots.set([...this.DINNER_SLOTS]);
+      }
+    });
+  }
+
   futureDateValidator(control: AbstractControl): ValidationErrors | null {
     if (!control.value) return null;
     return control.value < this.today ? { pastDate: true } : null;
@@ -209,46 +238,26 @@ export class ReservationComponent {
     if (!selectedDate) return;
 
     this.slotsLoading.set(true);
-    this.http.get<string[]>(`${environment.apiUrl}/reservations/available-slots?date=${selectedDate}`)
-      .subscribe({
-        next: slots => {
-          // For today, also filter out past slots + 30-min buffer
-          let filtered = slots;
-          if (selectedDate === this.today) {
-            const now = new Date();
-            const currentMinutes = now.getHours() * 60 + now.getMinutes();
-            filtered = slots.filter(slot => {
-              const [time, period] = slot.split(' ');
-              let [h, m] = time.split(':').map(Number);
-              if (period === 'PM' && h !== 12) h += 12;
-              if (period === 'AM' && h === 12) h = 0;
-              return (h * 60 + m) > currentMinutes + 30;
-            });
-          }
-          this.availableTimeSlots.set(filtered);
-          this.lunchSlots.set(filtered.filter(s => this.LUNCH_SLOTS.includes(s)));
-          this.dinnerSlots.set(filtered.filter(s => this.DINNER_SLOTS.includes(s)));
-          this.slotsLoading.set(false);
-        },
-        error: () => {
-          let fallback = [...this.ALL_SLOTS];
-          if (selectedDate === this.today) {
-            const now = new Date();
-            const currentMinutes = now.getHours() * 60 + now.getMinutes();
-            fallback = fallback.filter(slot => {
-              const [time, period] = slot.split(' ');
-              let [h, m] = time.split(':').map(Number);
-              if (period === 'PM' && h !== 12) h += 12;
-              if (period === 'AM' && h === 12) h = 0;
-              return (h * 60 + m) > currentMinutes + 30;
-            });
-          }
-          this.availableTimeSlots.set(fallback);
-          this.lunchSlots.set(fallback.filter(s => this.LUNCH_SLOTS.includes(s)));
-          this.dinnerSlots.set(fallback.filter(s => this.DINNER_SLOTS.includes(s)));
-          this.slotsLoading.set(false);
-        }
+    // Use hardcoded slots directly (they're static and never change)
+    let slots = [...this.ALL_SLOTS];
+
+    // For today, filter out past slots + 15-min buffer
+    if (selectedDate === this.today) {
+      const now = new Date();
+      const currentMinutes = now.getHours() * 60 + now.getMinutes();
+      slots = slots.filter(slot => {
+        const [time, period] = slot.split(' ');
+        let [h, m] = time.split(':').map(Number);
+        if (period === 'PM' && h !== 12) h += 12;
+        if (period === 'AM' && h === 12) h = 0;
+        return (h * 60 + m) > currentMinutes + 15;
       });
+    }
+
+    this.availableTimeSlots.set(slots);
+    this.lunchSlots.set(slots.filter(s => this.LUNCH_SLOTS.includes(s)));
+    this.dinnerSlots.set(slots.filter(s => this.DINNER_SLOTS.includes(s)));
+    this.slotsLoading.set(false);
   }
 
   submit(): void {

@@ -24,61 +24,29 @@ import { CustomerAuthService } from '../../services/customer-auth.service';
           <p class="text-amber-700 text-sm mt-1 tracking-widest uppercase font-medium">Menu Access</p>
         </div>
 
-        <!-- Step 1: Enter contact -->
-        <div *ngIf="step() === 1">
-          <p class="text-center text-gray-600 text-sm mb-6 leading-relaxed">
-            Enter the <span class="font-semibold text-amber-700">email or phone number</span> used when booking your table to receive your OTP.
-          </p>
+        <p class="text-center text-gray-600 text-sm mb-6 leading-relaxed">
+          Enter the <span class="font-semibold text-amber-700">email or phone number</span> used when booking your table.
+        </p>
 
-          <form [formGroup]="contactForm" (ngSubmit)="requestOtp()">
-            <div class="mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Email or Phone Number</label>
-              <input formControlName="contact" type="text"
-                     placeholder="e.g. john@email.com or 9876543210"
-                     class="w-full border-2 border-amber-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition"/>
-              <p *ngIf="contactForm.get('contact')?.touched && contactForm.get('contact')?.invalid"
-                 class="text-red-500 text-xs mt-1">Please enter a valid email or phone number.</p>
-            </div>
-
-            <div *ngIf="error()" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-4">
-              {{ error() }}
-            </div>
-
-            <button type="submit" [disabled]="loading() || contactForm.invalid"
-                    class="w-full bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition text-sm">
-              {{ loading() ? 'Checking...' : 'Send OTP' }}
-            </button>
-          </form>
-        </div>
-
-        <!-- Step 2: OTP received — show it for demo -->
-        <div *ngIf="step() === 2">
-          <div class="bg-green-50 border border-green-200 rounded-xl px-4 py-3 mb-5 text-center">
-            <p class="text-green-700 font-semibold text-sm">✅ OTP sent to your booking email!</p>
-            <p class="text-green-600 text-xs mt-1">Welcome, <span class="font-semibold">{{ customerName() }}</span> — check your inbox.</p>
-            <p class="text-gray-400 text-xs mt-1">Valid for 10 minutes</p>
+        <form [formGroup]="contactForm" (ngSubmit)="verifyAccess()">
+          <div class="mb-4">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Email or Phone Number</label>
+            <input formControlName="contact" type="text"
+                   placeholder="e.g. john@email.com or 9876543210"
+                   class="w-full border-2 border-amber-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-amber-500 transition"/>
+            <p *ngIf="contactForm.get('contact')?.touched && contactForm.get('contact')?.invalid"
+               class="text-red-500 text-xs mt-1">Please enter a valid email or phone number.</p>
           </div>
 
-          <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()">
-            <div class="mb-4">
-              <label class="block text-sm font-semibold text-gray-700 mb-2">Enter OTP</label>
-              <input formControlName="otp" type="text" maxlength="6"
-                     placeholder="6-digit OTP"
-                     class="w-full border-2 border-amber-200 rounded-xl px-4 py-3 text-sm text-center tracking-widest text-lg font-bold focus:outline-none focus:border-amber-500 transition"/>
-            </div>
+          <div *ngIf="error()" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-4">
+            {{ error() }}
+          </div>
 
-            <div *ngIf="error()" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-4">
-              {{ error() }}
-            </div>
-
-            <button type="submit" [disabled]="loading() || otpForm.invalid"
-                    class="w-full bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition text-sm">
-              {{ loading() ? 'Verifying...' : 'Verify & Access Menu' }}
-            </button>
-            <button type="button" (click)="step.set(1); error.set('')"
-                    class="w-full mt-3 text-amber-700 text-sm hover:underline">← Change contact</button>
-          </form>
-        </div>
+          <button type="submit" [disabled]="loading() || contactForm.invalid"
+                  class="w-full bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition text-sm">
+            {{ loading() ? 'Checking...' : 'Access Menu' }}
+          </button>
+        </form>
 
         <p class="text-center text-xs text-gray-400 mt-6">
           Don't have a booking?
@@ -89,15 +57,10 @@ import { CustomerAuthService } from '../../services/customer-auth.service';
   `
 })
 export class MenuLoginComponent {
-  step = signal(1);
   loading = signal(false);
   error = signal('');
-  customerName = signal('');
-  demoOtp = signal('');
-  contact = '';
 
   contactForm = this.fb.group({ contact: ['', Validators.required] });
-  otpForm = this.fb.group({ otp: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]] });
 
   constructor(
     private fb: FormBuilder,
@@ -109,40 +72,22 @@ export class MenuLoginComponent {
     }
   }
 
-  requestOtp(): void {
+  verifyAccess(): void {
     if (this.contactForm.invalid) return;
     this.loading.set(true);
     this.error.set('');
-    this.contact = this.contactForm.value.contact!.trim();
+    const contact = this.contactForm.value.contact!.trim();
 
-    this.authService.requestOtp(this.contact).subscribe({
-      next: res => {
-        this.loading.set(false);
-        this.customerName.set(res.customerName);
-        this.demoOtp.set(res.otp);
-        this.step.set(2);
-      },
-      error: err => {
-        this.loading.set(false);
-        this.error.set(err.error?.error || 'Something went wrong. Please try again.');
-      }
-    });
-  }
-
-  verifyOtp(): void {
-    if (this.otpForm.invalid) return;
-    this.loading.set(true);
-    this.error.set('');
-
-    this.authService.verifyOtp(this.contact, this.otpForm.value.otp!).subscribe({
-      next: res => {
+    this.authService.verifyAccess(contact).subscribe({
+      next: (res: any) => {
         this.authService.saveSession(res.token, res.customerName, res.contact, res.reservationDate, res.reservationTime);
         this.loading.set(false);
         this.router.navigate(['/menu']);
       },
-      error: err => {
+      error: (err: any) => {
+        console.error('Access error:', err);
         this.loading.set(false);
-        this.error.set(err.error?.error || 'Invalid OTP. Please try again.');
+        this.error.set(err.error?.error || 'Not found. Please check your email or phone number.');
       }
     });
   }

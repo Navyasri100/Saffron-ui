@@ -134,7 +134,7 @@ import { MenuItem, CartItem } from '../../models/models';
                   <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-0.5">
                       <span class="w-2.5 h-2.5 rounded-full flex-shrink-0"
-                            [style.background]="item.tags?.includes('vegetarian') ? '#16a34a' : '#dc2626'"></span>
+                            [style.background]="item.tags.includes('vegetarian') ? '#16a34a' : '#dc2626'"></span>
                       <h3 class="text-base font-semibold text-gray-900 truncate">{{ item.name }}</h3>
                     </div>
                     <p class="text-gray-500 text-xs leading-relaxed line-clamp-2 ml-4">{{ item.description }}</p>

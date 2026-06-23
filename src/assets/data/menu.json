@@ -1,0 +1,352 @@
+[
+  {
+    "id": 1,
+    "name": "Paneer Tikka",
+    "description": "Cottage cheese marinated in yogurt and spices, grilled to perfection",
+    "price": 320,
+    "imageUrl": "/images/paneer-tikka.jpg",
+    "category": {
+      "id": 1,
+      "name": "Appetizers",
+      "description": "Starters and small plates"
+    },
+    "tags": ["vegetarian", "appetizer", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 2,
+    "name": "Chicken Tikka",
+    "description": "Tender chicken pieces marinated in aromatic spices, tandoor cooked",
+    "price": 380,
+    "imageUrl": "/images/chicken-tikka.jpg",
+    "category": {
+      "id": 1,
+      "name": "Appetizers",
+      "description": "Starters and small plates"
+    },
+    "tags": ["non-vegetarian", "appetizer", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 3,
+    "name": "Samosa (4 pieces)",
+    "description": "Crispy golden pastry filled with spiced potatoes and peas",
+    "price": 180,
+    "imageUrl": "/images/samosa.jpg",
+    "category": {
+      "id": 1,
+      "name": "Appetizers",
+      "description": "Starters and small plates"
+    },
+    "tags": ["vegetarian", "appetizer"],
+    "isAvailable": true
+  },
+  {
+    "id": 4,
+    "name": "Onion Bhajiya",
+    "description": "Crispy fried onion fritters served with mint chutney",
+    "price": 200,
+    "imageUrl": "/images/bhajiya.jpg",
+    "category": {
+      "id": 1,
+      "name": "Appetizers",
+      "description": "Starters and small plates"
+    },
+    "tags": ["vegetarian", "appetizer"],
+    "isAvailable": true
+  },
+  {
+    "id": 5,
+    "name": "Tandoori Prawns",
+    "description": "Succulent prawns marinated and grilled, served with lemon",
+    "price": 520,
+    "imageUrl": "/images/tandoori-prawns.jpg",
+    "category": {
+      "id": 1,
+      "name": "Appetizers",
+      "description": "Starters and small plates"
+    },
+    "tags": ["non-vegetarian", "appetizer", "seafood"],
+    "isAvailable": true
+  },
+  {
+    "id": 6,
+    "name": "Butter Chicken",
+    "description": "Tender chicken in creamy tomato-based gravy, rich and aromatic",
+    "price": 420,
+    "imageUrl": "/images/butter-chicken.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["non-vegetarian", "main-course", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 7,
+    "name": "Palak Paneer",
+    "description": "Cottage cheese in spinach gravy, mild and nutritious",
+    "price": 350,
+    "imageUrl": "/images/palak-paneer.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["vegetarian", "main-course", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 8,
+    "name": "Chole Bhature",
+    "description": "Fluffy fried bread served with spiced chickpea curry",
+    "price": 280,
+    "imageUrl": "/images/chole-bhature.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["vegetarian", "main-course"],
+    "isAvailable": true
+  },
+  {
+    "id": 9,
+    "name": "Rogan Josh (Lamb)",
+    "description": "Tender lamb in aromatic tomato and yogurt based curry",
+    "price": 520,
+    "imageUrl": "/images/rogan-josh.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["non-vegetarian", "main-course"],
+    "isAvailable": true
+  },
+  {
+    "id": 10,
+    "name": "Chicken Tikka Masala",
+    "description": "Grilled chicken in creamy, tomato-based sauce",
+    "price": 420,
+    "imageUrl": "/images/chicken-tikka-masala.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["non-vegetarian", "main-course", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 11,
+    "name": "Shahi Tukda",
+    "description": "Cottage cheese in creamy cashew and saffron sauce",
+    "price": 380,
+    "imageUrl": "/images/shahi-tukda.jpg",
+    "category": {
+      "id": 2,
+      "name": "Main Course",
+      "description": "Rich curries and signature dishes"
+    },
+    "tags": ["vegetarian", "main-course"],
+    "isAvailable": true
+  },
+  {
+    "id": 12,
+    "name": "Naan",
+    "description": "Traditional clay-oven baked soft bread",
+    "price": 80,
+    "imageUrl": "/images/naan.jpg",
+    "category": {
+      "id": 3,
+      "name": "Bread",
+      "description": "Freshly baked breads"
+    },
+    "tags": ["vegetarian", "bread"],
+    "isAvailable": true
+  },
+  {
+    "id": 13,
+    "name": "Garlic Naan",
+    "description": "Naan topped with fresh garlic and cilantro",
+    "price": 100,
+    "imageUrl": "/images/garlic-naan.jpg",
+    "category": {
+      "id": 3,
+      "name": "Bread",
+      "description": "Freshly baked breads"
+    },
+    "tags": ["vegetarian", "bread"],
+    "isAvailable": true
+  },
+  {
+    "id": 14,
+    "name": "Butter Naan",
+    "description": "Soft naan brush with melted butter",
+    "price": 100,
+    "imageUrl": "/images/butter-naan.jpg",
+    "category": {
+      "id": 3,
+      "name": "Bread",
+      "description": "Freshly baked breads"
+    },
+    "tags": ["vegetarian", "bread"],
+    "isAvailable": true
+  },
+  {
+    "id": 15,
+    "name": "Roti",
+    "description": "Whole wheat Indian bread",
+    "price": 60,
+    "imageUrl": "/images/roti.jpg",
+    "category": {
+      "id": 3,
+      "name": "Bread",
+      "description": "Freshly baked breads"
+    },
+    "tags": ["vegetarian", "bread"],
+    "isAvailable": true
+  },
+  {
+    "id": 16,
+    "name": "Chicken Biryani",
+    "description": "Fragrant rice cooked with chicken and aromatic spices",
+    "price": 380,
+    "imageUrl": "/images/chicken-biryani.jpg",
+    "category": {
+      "id": 4,
+      "name": "Rice & Biryani",
+      "description": "Rice dishes and fragrant biryanis"
+    },
+    "tags": ["non-vegetarian", "rice", "popular"],
+    "isAvailable": true
+  },
+  {
+    "id": 17,
+    "name": "Vegetable Biryani",
+    "description": "Mixed vegetables with basmati rice and spices",
+    "price": 320,
+    "imageUrl": "/images/veg-biryani.jpg",
+    "category": {
+      "id": 4,
+      "name": "Rice & Biryani",
+      "description": "Rice dishes and fragrant biryanis"
+    },
+    "tags": ["vegetarian", "rice"],
+    "isAvailable": true
+  },
+  {
+    "id": 18,
+    "name": "Plain Basmati Rice",
+    "description": "Fluffy white basmati rice",
+    "price": 120,
+    "imageUrl": "/images/basmati-rice.jpg",
+    "category": {
+      "id": 4,
+      "name": "Rice & Biryani",
+      "description": "Rice dishes and fragrant biryanis"
+    },
+    "tags": ["vegetarian", "rice"],
+    "isAvailable": true
+  },
+  {
+    "id": 19,
+    "name": "Jeera Rice",
+    "description": "Basmati rice tempered with cumin seeds",
+    "price": 140,
+    "imageUrl": "/images/jeera-rice.jpg",
+    "category": {
+      "id": 4,
+      "name": "Rice & Biryani",
+      "description": "Rice dishes and fragrant biryanis"
+    },
+    "tags": ["vegetarian", "rice"],
+    "isAvailable": true
+  },
+  {
+    "id": 20,
+    "name": "Gulab Jamun",
+    "description": "Soft milk solids in sugar syrup flavored with rose and cardamom",
+    "price": 180,
+    "imageUrl": "/images/gulab-jamun.jpg",
+    "category": {
+      "id": 5,
+      "name": "Desserts",
+      "description": "Sweet endings"
+    },
+    "tags": ["vegetarian", "dessert"],
+    "isAvailable": true
+  },
+  {
+    "id": 21,
+    "name": "Rasmalai",
+    "description": "Soft cheese patties in reduced milk, flavored with cardamom",
+    "price": 220,
+    "imageUrl": "/images/rasmalai.jpg",
+    "category": {
+      "id": 5,
+      "name": "Desserts",
+      "description": "Sweet endings"
+    },
+    "tags": ["vegetarian", "dessert"],
+    "isAvailable": true
+  },
+  {
+    "id": 22,
+    "name": "Kheer",
+    "description": "Rice pudding made with milk, nuts, and cardamom",
+    "price": 160,
+    "imageUrl": "/images/kheer.jpg",
+    "category": {
+      "id": 5,
+      "name": "Desserts",
+      "description": "Sweet endings"
+    },
+    "tags": ["vegetarian", "dessert"],
+    "isAvailable": true
+  },
+  {
+    "id": 23,
+    "name": "Masala Chai",
+    "description": "Traditional spiced tea with milk and sugar",
+    "price": 80,
+    "imageUrl": "/images/masala-chai.jpg",
+    "category": {
+      "id": 6,
+      "name": "Beverages",
+      "description": "Drinks and refreshments"
+    },
+    "tags": ["vegetarian", "beverage"],
+    "isAvailable": true
+  },
+  {
+    "id": 24,
+    "name": "Mango Lassi",
+    "description": "Creamy yogurt drink with fresh mango",
+    "price": 120,
+    "imageUrl": "/images/mango-lassi.jpg",
+    "category": {
+      "id": 6,
+      "name": "Beverages",
+      "description": "Drinks and refreshments"
+    },
+    "tags": ["vegetarian", "beverage"],
+    "isAvailable": true
+  },
+  {
+    "id": 25,
+    "name": "Lemonade",
+    "description": "Fresh lemon juice with mint and sugar",
+    "price": 100,
+    "imageUrl": "/images/lemonade.jpg",
+    "category": {
+      "id": 6,
+      "name": "Beverages",
+      "description": "Drinks and refreshments"
+    },
+    "tags": ["vegetarian", "beverage"],
+    "isAvailable": true
+  }
+]

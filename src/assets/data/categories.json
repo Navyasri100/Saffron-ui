@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Appetizers",
+    "description": "Starters and small plates"
+  },
+  {
+    "id": 2,
+    "name": "Main Course",
+    "description": "Rich curries and signature dishes"
+  },
+  {
+    "id": 3,
+    "name": "Bread",
+    "description": "Freshly baked breads"
+  },
+  {
+    "id": 4,
+    "name": "Rice & Biryani",
+    "description": "Rice dishes and fragrant biryanis"
+  },
+  {
+    "id": 5,
+    "name": "Desserts",
+    "description": "Sweet endings"
+  },
+  {
+    "id": 6,
+    "name": "Beverages",
+    "description": "Drinks and refreshments"
+  }
+]

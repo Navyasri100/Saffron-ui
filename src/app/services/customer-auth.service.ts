@@ -2,7 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { OtpRequest, VerifyOtpResponse, Reservation } from '../models/models';
+import { Reservation } from '../models/models';
+
+interface VerifyAccessResponse {
+  token: string;
+  customerName: string;
+  contact: string;
+  reservationDate: string;
+  reservationTime: string;
+  message: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class CustomerAuthService {
@@ -10,12 +19,8 @@ export class CustomerAuthService {
 
   constructor(private http: HttpClient) {}
 
-  requestOtp(contact: string): Observable<OtpRequest> {
-    return this.http.post<OtpRequest>(`${this.api}/request-otp`, { contact });
-  }
-
-  verifyOtp(contact: string, otp: string): Observable<VerifyOtpResponse> {
-    return this.http.post<VerifyOtpResponse>(`${this.api}/verify-otp`, { contact, otp });
+  verifyAccess(contact: string): Observable<VerifyAccessResponse> {
+    return this.http.post<VerifyAccessResponse>(`${this.api}/verify-access`, { contact });
   }
 
   saveSession(token: string, customerName: string, contact: string, reservationDate = '', reservationTime = ''): void {
@@ -82,18 +87,25 @@ export class CustomerAuthService {
     if (!token) return false;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      if (payload.exp * 1000 <= Date.now()) { this.logout(); return false; }
-    } catch { this.logout(); return false; }
-
-    // Auto-logout if reservation date has passed
-    const resDate = this.getReservationDate();
-    if (resDate) {
-      const today = new Date();
-      const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-      if (todayStr > resDate) { this.logout(); return false; }
+      if (payload.exp * 1000 <= Date.now()) {
+        this.logout();
+        return false;
+      }
+      // Auto-logout if reservation date has passed
+      const resDate = this.getReservationDate();
+      if (resDate) {
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+        if (todayStr > resDate) {
+          this.logout();
+          return false;
+        }
+      }
+      return true;
+    } catch {
+      this.logout();
+      return false;
     }
-
-    return true;
   }
 
   logout(): void {
