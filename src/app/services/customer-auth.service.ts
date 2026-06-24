@@ -84,25 +84,32 @@ export class CustomerAuthService {
 
   isLoggedIn(): boolean {
     const token = this.getToken();
+    console.log('isLoggedIn: token =', token ? token.substring(0, 20) + '...' : null);
     if (!token) return false;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('isLoggedIn: payload =', payload);
       if (payload.exp * 1000 <= Date.now()) {
+        console.log('isLoggedIn: token expired');
         this.logout();
         return false;
       }
       // Auto-logout if reservation date has passed
       const resDate = this.getReservationDate();
+      console.log('isLoggedIn: resDate =', resDate);
       if (resDate) {
         const today = new Date();
         const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
         if (todayStr > resDate) {
+          console.log('isLoggedIn: reservation date passed');
           this.logout();
           return false;
         }
       }
+      console.log('isLoggedIn: returning true');
       return true;
-    } catch {
+    } catch (e) {
+      console.error('isLoggedIn: error =', e);
       this.logout();
       return false;
     }
