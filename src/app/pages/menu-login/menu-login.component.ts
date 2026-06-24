@@ -80,8 +80,12 @@ export class MenuLoginComponent {
 
     this.authService.verifyAccess(contact).subscribe({
       next: (res: any) => {
+        console.log('Response received:', res);
+        console.log('Calling saveSession with:', res.token, res.customerName, res.contact);
         this.authService.saveSession(res.token, res.customerName, res.contact, res.reservationDate, res.reservationTime);
+        console.log('After saveSession, localStorage:', Object.keys(localStorage));
         this.loading.set(false);
+        console.log('About to navigate to /menu');
         this.router.navigate(['/menu']);
       },
       error: (err: any) => {
