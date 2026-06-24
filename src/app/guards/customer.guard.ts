@@ -5,7 +5,13 @@ import { CustomerAuthService } from '../services/customer-auth.service';
 export const customerGuard: CanActivateFn = () => {
   const auth = inject(CustomerAuthService);
   const router = inject(Router);
-  if (auth.isLoggedIn()) return true;
+  const isLoggedIn = auth.isLoggedIn();
+  console.log('customerGuard: isLoggedIn =', isLoggedIn);
+  if (isLoggedIn) {
+    console.log('customerGuard: Access granted');
+    return true;
+  }
+  console.log('customerGuard: Redirecting to menu-login');
   router.navigate(['/menu-login']);
   return false;
 };
